@@ -1,46 +1,39 @@
 import streamlit as st
 import pandas as pd
+from sklearn.decomposition import PCA
+import umap
 
+st.title(":computer: Software Engineering Project")
 
-# function to read the uploaded file
-def read_file(file):
-    try:
+# creating tabs
+tab1, tab2 = st.tabs(["Upload File", "Visualization"])
+
+# file uploader tab
+with tab1:
+    st.header("Upload File")
+    # file uploader 
+    file = st.file_uploader("Choose a file", type=["csv", "xlsx", "tsv"])
+
+    if file is not None:
         if file.name.endswith('.csv'):
-            return pd.read_csv(file, delimiter=';')
-        elif file.name.endswith('.tsv'):
-            return pd.read_csv(file, delimiter='\t')
+            data = pd.read_csv(file)
         elif file.name.endswith('.xlsx'):
-            return pd.read_excel(file)
-        else:
-            st.error("Unsupported file type!")
-            return None
-    except Exception as e:
-        st.error(f"Error reading file: {e}")
-        return None
-
-
-# function to ensure the table has a labels column
-def addLabelColumn(df):
-    if df.shape[1] < 2 or df.columns[-1] != "labels":
-        df["labels"] = None 
-    return df
-
-
-st.title("File Uploader for CSV, TSV, and Excel")
-
-# file uploader 
-file = st.file_uploader("Choose a file", type=["csv", "tsv", "xlsx"])
-
-if file is not None:
-    df = read_file(file)
-    
-    if df is not None:
-        st.success("File uploaded successfully!")
+            data = pd.read_excel(file)
+        elif file.name.endswith('.tsv'):
+            data = pd.read_csv(file, delimiter='\t')
         
-        # add labels column
-        df = addLabelColumn(df)
-        
-        # display the file
-        st.write(df)
-    else:
-        st.error("Failed to read the file!")
+        st.write("Data Loaded Successfully!")
+        st.dataframe(data)
+
+
+        # Data Table Specifications
+        st.header("Data Table Specifications")
+        st.write(f"**Number of samples (S):** :blue[{data.shape[0]}]")
+        st.write(f"**Number of features (F):** :blue[{data.shape[1] - 1}]")
+        st.write(f"**Feature columns:** :blue[{list(data.columns[:-1])}]")
+        st.write(f"**Label column:** :blue[{data.columns[-1]}]")
+
+
+# visualization tab
+with tab2:
+    "work in progress"
