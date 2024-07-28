@@ -3,11 +3,12 @@ import pandas as pd
 from sklearn.decomposition import PCA
 import umap
 import plotly.express as px
+from sklearn.feature_selection import SelectKBest, chi2
 
 st.title(":computer: Software Engineering Project")
 
 # creating tabs
-tab1, tab2 = st.tabs(["Upload File", "Visualization"])
+tab1, tab2, tab3 = st.tabs(["Upload File", "Visualization", "Feature Selection"])
 
 # file uploader tab
 with tab1:
@@ -38,6 +39,7 @@ with tab1:
 # visualization tab
 with tab2:
     if file is not None:
+        st.header('Data Visualization')
         # extracting the features and labels
         features = data.iloc[:, :-1]
         labels = data.iloc[:, -1]
@@ -96,5 +98,23 @@ with tab2:
             selected_feature = st.selectbox('Select feature for box plot', data.columns[:-1])
             fig_box = px.box(data, y=selected_feature, title=f'Box Plot of {selected_feature}')
             st.plotly_chart(fig_box)
+    else:
+        st.warning("Please upload a file to proceed.", icon="⚠️")
+
+
+# feature selection tab using SelectKBest
+with tab3:
+    if file is not None:
+        st.header('Feature Selection')
+        num_features = st.slider('Select number of features', 1, len(features.columns))
+        selector = SelectKBest(chi2, k=num_features)
+        selected_features = selector.fit_transform(features, labels)
+
+        st.write(f"Selected top {num_features} features:")
+        selected_columns = features.columns[selector.get_support(indices=True)]
+        st.write(selected_columns)
+
+        reduced_data = pd.DataFrame(selected_features, columns=selected_columns)
+        st.dataframe(reduced_data)
     else:
         st.warning("Please upload a file to proceed.", icon="⚠️")
