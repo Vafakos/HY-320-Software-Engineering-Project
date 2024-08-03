@@ -158,38 +158,42 @@ with tab4:
                 roc_auc_reduced = roc_auc_score(y_test_reduced, y_prob_reduced, multi_class='ovr')
             else:
                 roc_auc_reduced = "N/A"
+    else:
+        st.warning("Please upload a file to proceed.", icon="⚠️")
 
 
 # results and comparison tab
 with tab5:
-    st.header('Results and Comparison')
-    if 'roc_auc_orig' in locals() and 'roc_auc_reduced' in locals():
-        st.write(f'### Results for Original Features:')
-        st.write(f'**Accuracy:** {accuracy_orig:.2f}')
-        st.write(f'**F1-Score:** {f1_orig:.2f}')
-        st.write(f'**ROC-AUC:** {roc_auc_orig}')
+    if file is not None:  
+        st.header('Results and Comparison')
+        if 'roc_auc_orig' in locals() and 'roc_auc_reduced' in locals():
+            st.write(f'### Results for Original Features:')
+            st.write(f'**Accuracy:** {accuracy_orig:.2f}')
+            st.write(f'**F1-Score:** {f1_orig:.2f}')
+            st.write(f'**ROC-AUC:** {roc_auc_orig}')
 
-        st.write(f'### Results for Reduced Features:')
-        st.write(f'**Accuracy:** {accuracy_reduced:.2f}')
-        st.write(f'**F1-Score:** {f1_reduced:.2f}')
-        st.write(f'**ROC-AUC:** {roc_auc_reduced}')
+            st.write(f'### Results for Reduced Features:')
+            st.write(f'**Accuracy:** {accuracy_reduced:.2f}')
+            st.write(f'**F1-Score:** {f1_reduced:.2f}')
+            st.write(f'**ROC-AUC:** {roc_auc_reduced}')
 
-        # visual comparison of metrics
-        metrics_df = pd.DataFrame({
-            'Metric': ['Accuracy', 'F1-Score', 'ROC-AUC'],
-            'Original': [accuracy_orig, f1_orig, roc_auc_orig],
-            'Reduced': [accuracy_reduced, f1_reduced, roc_auc_reduced]
-        })
+            # visual comparison of metrics
+            metrics_df = pd.DataFrame({
+                'Metric': ['Accuracy', 'F1-Score', 'ROC-AUC'],
+                'Original': [accuracy_orig, f1_orig, roc_auc_orig],
+                'Reduced': [accuracy_reduced, f1_reduced, roc_auc_reduced]
+            })
 
-        fig_metrics = px.bar(metrics_df, x='Metric', y=['Original', 'Reduced'],
-                             title='Comparison of Performance Metrics',
-                             barmode='group')
-        st.plotly_chart(fig_metrics)
-    else:
-        st.write(f'### Results for Original Features:')
-        st.write(f'**Accuracy:** {accuracy_orig:.2f}')
-        st.write(f'**F1-Score:** {f1_orig:.2f}')
-        st.write(f'**ROC-AUC:** {roc_auc_orig}')
+            fig_metrics = px.bar(metrics_df, x='Metric', y=['Original', 'Reduced'],
+                                 title='Comparison of Performance Metrics',
+                                 barmode='group')
+            st.plotly_chart(fig_metrics)
+        else:
+            st.write(f'### Results for Original Features:')
+            st.write(f'**Accuracy:** {accuracy_orig:.2f}')
+            st.write(f'**F1-Score:** {f1_orig:.2f}')
+            st.write(f'**ROC-AUC:** {roc_auc_orig}')
 
-        st.write("No reduced features data available.")
-        
+            st.write("No reduced features data available.")
+    else: 
+        st.warning("Please upload a file to proceed.", icon="⚠️")
