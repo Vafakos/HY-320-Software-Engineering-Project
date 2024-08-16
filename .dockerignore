@@ -1,0 +1,34 @@
+# Ignore Python cache and compiled files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Ignore environment and dependency directories
+venv/
+env/
+.venv/
+.venv/*
+env/*
+*.egg-info/
+.eggs/
+
+# Ignore local config files
+*.env
+*.env.*
+
+# Ignore Git-related files and directories
+.git
+.gitignore
+
+# Ignore Docker-related files
+Dockerfile
+.dockerignore
+
+# Ignore the virtual environment if you use one
+.vscode/
+.idea/
+
+# Ignore temporary files
+*.log
+*.sqlite3
+*.db
